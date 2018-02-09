@@ -906,16 +906,25 @@ var createPluginSetupWizard = function(appendTarget) {
 			showStatePanel();
 		}
 	};
-	
+
+	var saveJenkinsUrl = function(callback){
+		$('button').prop({disabled:true});
+
+		var rootUrl = $('iframe[src]').contents().find('form.root-url');
+		securityConfig.saveRootUrl(rootUrl, callback);
+	};
+
 	// call to submit the firstuser
 	var saveFirstUser = function() {
-		$('button').prop({disabled:true});
-		securityConfig.saveFirstUser($('iframe[src]').contents().find('form:not(.no-json)'), handleStaplerSubmit, handleStaplerSubmit);
+		saveJenkinsUrl(function(){
+			securityConfig.saveFirstUser($('iframe[src]').contents().find('form:not(.no-json)'), handleStaplerSubmit, handleStaplerSubmit);
+		});
 	};
 
 	var skipFirstUser = function() {
-		$('button').prop({disabled:true});
-		showSetupCompletePanel({message: translations.installWizard_firstUserSkippedMessage});
+		saveJenkinsUrl(function(){
+			showSetupCompletePanel({message: translations.installWizard_firstUserSkippedMessage});
+		});
 	};
 	
 	// call to setup the proxy

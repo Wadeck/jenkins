@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.util.SystemProperties;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -28,6 +29,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -234,6 +236,18 @@ public class SetupWizard extends PageDecorator {
             }
         }
         return false;
+    }
+
+    @RequirePOST
+    public HttpResponse doConfigureRootUrl(@QueryParameter String rootUrl) {
+        Jenkins j = Jenkins.getInstance();
+        j.checkPermission(Jenkins.ADMINISTER);
+
+        LOGGER.log(Level.FINE, "Root URL set during SetupWizard to {0}", new Object[]{ rootUrl });
+
+        JenkinsLocationConfiguration.get().setUrl(rootUrl);
+
+        return HttpResponses.okJSON();
     }
 
     /**
