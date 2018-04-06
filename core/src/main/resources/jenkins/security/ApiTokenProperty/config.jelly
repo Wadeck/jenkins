@@ -33,7 +33,7 @@ THE SOFTWARE.
                 <div class="list-empty-message">${%NoTokenYet}</div>
             </div>
             <f:repeatable name="tokenStore" var="token" items="${tokenList}" minimum="0"
-                          noAddButton="${!descriptor.hasCurrentUserRightToGenerateNewToken(it)}">
+                          noAddButton="${!descriptor.canCreateTokenUsingUI() || !descriptor.hasCurrentUserRightToGenerateNewToken(it)}">
                 <j:choose>
                     <j:when test="${token!=null}">
                         <j:set var="legacyClazz" value="" />
@@ -123,7 +123,9 @@ THE SOFTWARE.
             <f:entry title="${%Legacy API Token}" field="apiToken">
                 <f:readOnlyTextbox id="apiToken" default="${descriptor.noLegacyToken}"/>
             </f:entry>
-            <f:validateButton title="${%Change API Token}" method="changeToken" clazz="ignore-dirty-panel"/>
+            <j:if test="${descriptor.canCreateTokenUsingUI()}">
+                <f:validateButton title="${%Change API Token}" method="changeToken" clazz="ignore-dirty-panel"/>
+            </j:if>
         </f:advanced>
     </j:if>
 </j:jelly>

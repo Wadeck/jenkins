@@ -339,10 +339,28 @@ public class ApiTokenProperty extends UserProperty {
                 return new ApiTokenProperty(null);
             }
         }
+        
+        // only hide the UI elements, do not block call
+        @Restricted(NoExternalUse.class)
+        public boolean canCreateTokenUsingUI(){
+            return ApiTokenPropertyConfiguration.get().isCreationOfTokenUsingUIEnabled();
+        }
     
         // for Jelly view
         @Restricted(NoExternalUse.class)
         public boolean mustDisplayLegacyApiToken(User propertyOwner) {
+            ApiTokenProperty property = propertyOwner.getProperty(ApiTokenProperty.class);
+            if(property != null && property.apiToken != null){
+                return true;
+            }
+            
+            ApiTokenPropertyConfiguration config = ApiTokenPropertyConfiguration.get();
+            return config.isCreationOfLegacyTokenEnabled() && config.isCreationOfTokenUsingUIEnabled();
+        }
+    
+        // for Jelly view
+        @Restricted(NoExternalUse.class)
+        public boolean canCreateLegacyApiToken(User propertyOwner) {
             ApiTokenProperty property = propertyOwner.getProperty(ApiTokenProperty.class);
             if(property != null && property.apiToken != null){
                 return true;

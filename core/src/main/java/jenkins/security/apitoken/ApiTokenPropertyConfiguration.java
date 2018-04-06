@@ -47,6 +47,11 @@ public class ApiTokenPropertyConfiguration extends GlobalConfiguration {
      * For security reason, we do not recommend to enable this but we let that open to ease upgrade.
      */
     private boolean creationOfLegacyTokenEnabled = false;
+
+    /**
+     * Allow user to create token using the UI. This flag does not block usage of API.
+     */
+    private boolean creationOfTokenUsingUIEnabled = true;
     
     public static ApiTokenPropertyConfiguration get() {
         return GlobalConfiguration.all().get(ApiTokenPropertyConfiguration.class);
@@ -76,6 +81,14 @@ public class ApiTokenPropertyConfiguration extends GlobalConfiguration {
     public void setCreationOfLegacyTokenEnabled(boolean creationOfLegacyTokenEnabled) {
         this.creationOfLegacyTokenEnabled = creationOfLegacyTokenEnabled;
         save();
+    }
+
+    public boolean isCreationOfTokenUsingUIEnabled() {
+        return creationOfTokenUsingUIEnabled;
+    }
+
+    public void setCreationOfTokenUsingUIEnabled(boolean creationOfTokenUsingUIEnabled) {
+        this.creationOfTokenUsingUIEnabled = creationOfTokenUsingUIEnabled;
     }
 
     @Override 
